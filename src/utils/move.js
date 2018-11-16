@@ -77,6 +77,7 @@ function gameOver(data) {
     // 当棋盘摆满棋子时，遍历所有棋子看其与相邻的棋子数值是否相等，一旦有相等的就跳出循环
     for (let i = 0; i < data.length; i++) {
       for (let j = 0; j < data[i].length; j++) {
+        console.log(i, j);
         if ((data[i][j + 1] && data[i][j] == data[i][j + 1]) || (data[i + 1][j] && data[i][j] == data[i + 1][j])) {
           isEmpty = true;
           break;
@@ -86,8 +87,7 @@ function gameOver(data) {
     // 当遍历所有棋子后与相邻位置棋子数值都不相等，游戏结束
     if (!isEmpty) {
       // 获取当前得分
-      let score = document.getElementById("show_number").innerHTML;
-      alert("潇洒人生，极限挑战。游戏结束！ 您的得分：" + score + " 分");
+      alert("潇洒人生，极限挑战。游戏结束！");
       // 点击确定按钮后初始化游戏
       initData();
     }
@@ -103,11 +103,13 @@ function rotate(arr, n) {
   let tmp = Array.from(Array(NUM)).map(() => Array(NUM).fill(undefined));
   for (let i = 0; i < NUM; i++) {
     for (let j = 0; j < NUM; j++) {
-      tmp[NUM - 1 - i][j] = arr[j][i]
+      tmp[NUM - 1 - i][j] = arr[j][i];
     }
   }
-  if (n > 1) tmp = rotate(tmp, n - 1)
-  return tmp
+  if (n > 1) {
+    tmp = rotate(tmp, n - 1);
+  }
+  return tmp;
 }
 
 /**
@@ -119,8 +121,10 @@ export function move(i, data) {
   let tmpArr = rotate(data, i);
   //合并
   tmpArr = merge(tmpArr);
+
   //转置回去，把数据还原
   data = rotate(tmpArr, 4 - i);
+
   //判断游戏是否结束
   gameOver(data);
   //如果移动过就放置一个数
@@ -130,40 +134,39 @@ export function move(i, data) {
 
 /* 单行向左合并操作 */
 function merge(tmp) {
-
+  doPut = false;
   tmp.forEach((item) => {
     //记录是否合并过
-    let hasCombin = Array(NUM).fill(undefined);
-    item.forEach((j, k) => {
-      while (k && j !== 0) {
-        if (item[k - 1] === 0) { //当前位置的前一位置为空,交换俩位置
-          item[k - 1] = j;
-          item[k] = 0;
+    let hasCombin = Array(item.length).fill(undefined);
+    item.forEach((num, j) => {
+      while (j && num) {
+        if (item[j - 1] === 0) { //当前位置的前一位置为空,交换俩位置
+          item[j - 1] = item[j];
+          item[j] = 0;
           doPut = true;
-          if (hasCombin[k]) {
-            hasCombin[k - 1] = true;
-            hasCombin[k] = false;
+          if (hasCombin[j]) {
+            hasCombin[j - 1] = true;
+            hasCombin[j] = false;
           }
-        } else if (tmp[k - 1] === j && !hasCombin[k] && !hasCombin[k - 1]) {
+        } else if (item[j - 1] === item[j] && !hasCombin[j] && !hasCombin[j - 1]) {
           //当前位置与前一位置数字相同，合并到前一位置，然后清空当前位置
-          j *= 2;
-          tmp[k - 1] = j;
-          tmp[k] = 0;
+          item[j] *= 2;
+          item[j - 1] = item[j];
+          item[j] = 0;
           doPut = true;
-          hasCombin[k - 1] = true; //记录合并位置
+          hasCombin[j - 1] = true; //记录合并位置
         } else {
           break;
         }
-        k--;
+        j--;
       }
-    });
+    })
   });
   return tmp;
 }
 
 export default {
   initData,
-  randomBetween,
   move,
   calScore
 }

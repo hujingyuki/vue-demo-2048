@@ -37,7 +37,7 @@ module.exports = {
     // Various Dev Server settings
     host: 'localhost',
     // dev-server监听的端口
-    port: 8080,
+    port: 8088,
     cssSourceMap: false,
     devtool: 'cheap-module-eval-source-map',
     // Use Eslint Loader?

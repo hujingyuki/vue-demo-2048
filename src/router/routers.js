@@ -1,9 +1,9 @@
 /** @format */
 
 // const HelloWorld = r => require.ensure([], () => r(require('@/components/pages/HelloWorld')), 'helloword')
-const HelloWorld = resolve =>
-  require(['@/components/pages/HelloWorld'], resolve);
+const index = resolve =>
+  require(['@/components/pages/index'], resolve);
 
 export default [
-  { path: '/', name: 'HelloWorld', component: HelloWorld },
+  { path: '/', name: 'index', component: index },
 ];
